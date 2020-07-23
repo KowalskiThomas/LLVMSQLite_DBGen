@@ -1,3 +1,7 @@
 [submodule "tpch-dbgen"]
 	path = tpch-dbgen
 	url = https://github.com/lovasoa/tpch-dbgen.git
+
+[submodule "ssbm-dbgen"]
+	path = ssbm-dbgen
+	url = https://github.com/electrum/ssb-dbgen.git
