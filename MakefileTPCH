@@ -3,8 +3,13 @@ TABLES = customer lineitem nation orders partsupp part region supplier
 FOLDER = tpch-dbgen
 TABLE_FILES = $(foreach table, $(TABLES), $(FOLDER)/$(table).tbl)
 
+all: TPC-H-small.db TPC-H-med.db TPC-H-big.db TPC-H-huge.db
+
+clean:
+	rm -rf $(TABLE_FILES) $(FOLDER)/dbgen
+
 clean_table_files:
-	rm $(FOLDER)/*.tbl
+	rm -f $(FOLDER)/*.tbl
 
 TPC-H-small.db: $(FOLDER)/dbgen
 	cd $(FOLDER) && ./dbgen -v -f -s 0.01
@@ -32,8 +37,3 @@ TPC-H-huge.db: $(FOLDER)/dbgen
 
 $(FOLDER)/dbgen: $(FOLDER)/makefile
 	cd $(FOLDER) && $(MAKE)
-
-clean:
-	rm -rf $(TABLE_FILES) $(FOLDER)/dbgen
-
-all: TPC-H-small.db TPC-H-med.db TPC-H-big.db TPC-H-huge.db
