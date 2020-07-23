@@ -1,0 +1,39 @@
+SCALE_FACTOR?=1
+TABLES = lineorder part supplier customer date
+FOLDER = ssb-dbgen
+TABLE_FILES = $(foreach table, $(TABLES), $(FOLDER)/$(table).tbl)
+
+clean_table_files:
+	rm $(FOLDER)/*.tbl
+
+SSBM-small.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -f -s 0.01  -T a
+	chmod +r $(TABLE_FILES)
+	./create_db_ssbm.sh $(TABLES)
+	mv TPC-H.db SSBM-small.db
+
+SSBM-med.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -f -s 0.1
+	chmod +r $(TABLE_FILES)
+	./create_db_ssbm.sh $(TABLES)
+	mv TPC-H.db SSBM-med.db
+
+SSBM-big.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -f -s 1
+	chmod +r $(TABLE_FILES)
+	./create_db_ssbm.sh $(TABLES)
+	mv TPC-H.db SSBM-big.db
+
+SSBM-huge.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -f -s 2
+	chmod +r $(TABLE_FILES)
+	./create_db_ssbm.sh $(TABLES)
+	mv TPC-H.db SSBM-huge.db
+
+$(FOLDER)/dbgen: $(FOLDER)/makefile
+	cd $(FOLDER) && $(MAKE)
+
+clean:
+	rm -rf $(TABLE_FILES) $(FOLDER)/dbgen
+
+all: SSBM-small.db SSBM-med.db SSBM-big.db SSBM-huge.db

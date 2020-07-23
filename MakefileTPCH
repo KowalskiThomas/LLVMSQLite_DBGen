@@ -1,0 +1,39 @@
+SCALE_FACTOR?=1
+TABLES = customer lineitem nation orders partsupp part region supplier
+FOLDER = tpch-dbgen
+TABLE_FILES = $(foreach table, $(TABLES), $(FOLDER)/$(table).tbl)
+
+clean_table_files:
+	rm $(FOLDER)/*.tbl
+
+TPC-H-small.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -v -f -s 0.01
+	chmod +r $(TABLE_FILES)
+	./create_db_tpch.sh $(TABLES)
+	mv TPC-H.db TPC-H-small.db
+
+TPC-H-med.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -v -f -s 0.1
+	chmod +r $(TABLE_FILES)
+	./create_db_tpch.sh $(TABLES)
+	mv TPC-H.db TPC-H-med.db
+
+TPC-H-big.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -v -f -s 1
+	chmod +r $(TABLE_FILES)
+	./create_db_tpch.sh $(TABLES)
+	mv TPC-H.db TPC-H-big.db
+
+TPC-H-huge.db: $(FOLDER)/dbgen
+	cd $(FOLDER) && ./dbgen -v -f -s 2
+	chmod +r $(TABLE_FILES)
+	./create_db_tpch.sh $(TABLES)
+	mv TPC-H.db TPC-H-huge.db
+
+$(FOLDER)/dbgen: $(FOLDER)/makefile
+	cd $(FOLDER) && $(MAKE)
+
+clean:
+	rm -rf $(TABLE_FILES) $(FOLDER)/dbgen
+
+all: TPC-H-small.db TPC-H-med.db TPC-H-big.db TPC-H-huge.db
