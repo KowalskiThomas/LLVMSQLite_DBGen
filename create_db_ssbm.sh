@@ -17,9 +17,9 @@ sqlite3 "$db" < sqlite-ddl-ssbm.sql
 RET_CODE=0
 for table in $TABLES; do
 	echo "Importing table '$table'..." >&2
-	data_file="tpch-dbgen/$table.tbl"
+	data_file="ssb-dbgen/$table.tbl"
 	if [ ! -e "$data_file" ]; then
-		echo "'$data_file' does’nt exist. Skipping..." >&2
+		echo "'$data_file' does not exist. Skipping..." >&2
 		RET_CODE=1
 		continue
 	fi
